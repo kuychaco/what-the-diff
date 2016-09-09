@@ -21,6 +21,7 @@ index 83db48f..bf269f4 100644
       newPath: 'file.txt',
       oldMode: '100644',
       newMode: '100644',
+      status: 'modified',
       hunks: [
         {
           oldStartLine: 1,
@@ -56,6 +57,7 @@ index 0000000..dab621c
       newPath: 'file.txt',
       oldMode: null,
       newMode: '100644',
+      status: 'added',
       hunks: [
         {
           oldStartLine: 0,
@@ -86,6 +88,7 @@ index dab621c..0000000
       newPath: null,
       oldMode: '100644',
       newMode: null,
+      status: 'deleted',
       hunks: [
         {
           oldStartLine: 1,
@@ -120,6 +123,7 @@ index 83db48f..bf269f4
       newPath: 'file.txt',
       oldMode: '100644',
       newMode: '100755',
+      status: 'modified',
       hunks: [
         {
           oldStartLine: 1,
@@ -151,7 +155,8 @@ index 0000000..e69de29`
       newPath: 'newfile.txt',
       oldMode: null,
       newMode: '100644',
-      hunks: []
+      hunks: [],
+      status: 'added'
     }
   ])
   test.done()
@@ -173,6 +178,7 @@ index 83db48f..bf269f4 100644
       newPath: 'file.txt',
       oldMode: '100644',
       newMode: '100644',
+      status: 'modified',
       hunks: [
         {
           oldStartLine: 1,
@@ -215,6 +221,7 @@ index 83db48f..bf269f4 100644
       newPath: 'file.txt',
       oldMode: '100644',
       newMode: '100644',
+      status: 'modified',
       hunks: [
         {
           oldStartLine: 1,
@@ -265,6 +272,7 @@ index a999a0c..266014b 100644
       newPath: 'file.txt',
       oldMode: '100644',
       newMode: '100644',
+      status: 'modified',
       hunks: [
         {
           oldStartLine: 1,
@@ -300,6 +308,7 @@ index 266014b..a999a0c 100644
       newPath: 'file.txt',
       oldMode: '100644',
       newMode: '100644',
+      status: 'modified',
       hunks: [
         {
           oldStartLine: 1,
@@ -336,6 +345,7 @@ index 83db48f..bf269f4 100644
       newPath: 'file.txt',
       oldMode: '100644',
       newMode: '100644',
+      status: 'modified',
       hunks: [
         {
           oldStartLine: 1,

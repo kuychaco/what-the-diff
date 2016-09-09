@@ -1,24 +1,39 @@
 {
   function postProcessDiff (header, file_modes, patch) {
-    if (patch) return Object.assign({}, patch, {oldMode: file_modes.old_mode, newMode: file_modes.new_mode})
-    if (file_modes.new_mode && !file_modes.old_mode) {
-      return {
-        oldPath: null,
-        newPath: header.file_name,
-        oldMode: null,
-        newMode: file_modes.new_mode,
-        hunks: []
-      }
-    } else if (file_modes.old_mode && !file_modes.new_mode) {
+    let status
+    if (file_modes.old_mode && !file_modes.new_mode) {
       return {
         newPath: null,
         oldPath: header.file_name,
         newMode: null,
         oldMode: file_modes.old_mode,
-        hunks: []
+        hunks: patch ? patch.hunks : [],
+        status: 'deleted'
+      }
+    } else if (!file_modes.old_mode && file_modes.new_mode) {
+      return {
+        oldPath: null,
+        newPath: header.file_name,
+        oldMode: null,
+        newMode: file_modes.new_mode,
+        hunks: patch ? patch.hunks : [],
+        status: 'added'
+      }
+    } else if (file_modes.old_mode && file_modes.new_mode) {
+      if (patch) {
+        return {
+          newPath: header.file_name,
+          oldPath: header.file_name,
+          oldMode: file_modes.old_mode,
+          newMode: file_modes.new_mode,
+          hunks: patch.hunks,
+          status: 'modified'
+        }
+      } else {
+        throw new Error('patch expected')
       }
     } else {
-      throw new Error('invalid diff')
+      throw new Error('file modes missing')
     }
   }
 }
@@ -86,8 +101,8 @@ changed_file_modes
   = 'old mode ' old_mode:TEXT NL 'new mode ' new_mode:TEXT NL { return {old_mode, new_mode} }
 
 index_line
-  = 'index ' things:TEXT_NO_SPACES ' ' file_mode:TEXT NL { return {old_mode: file_mode, new_mode: file_mode} }
-  / 'index ' things:TEXT_NO_SPACES NL { return null }
+  = 'index ' TEXT_NO_SPACES ' ' file_mode:TEXT NL { return {old_mode: file_mode, new_mode: file_mode} }
+  / 'index ' TEXT_NO_SPACES NL 
 
 
 
