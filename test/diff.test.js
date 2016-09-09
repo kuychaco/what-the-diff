@@ -257,3 +257,40 @@ index 266014b..a999a0c 100644
   ])
   test.done()
 }
+
+exports.testEmptyHunkLine = function(test) {
+  var str = `diff --git file.txt file.txt
+index 83db48f..bf269f4 100644
+--- file.txt
++++ file.txt
+@@ -1,3 +1,3 @@
+ line1
+-line2
++
+ line3`
+
+  const output = diff.parse(str)
+  assert.deepEqual(output, [
+    {
+      oldPath: 'file.txt',
+      newPath: 'file.txt',
+      oldMode: '100644',
+      newMode: '100644',
+      hunks: [
+        {
+          oldStartLine: 1,
+          oldLineCount: 3,
+          newStartLine: 1,
+          newLineCount: 3,
+          lines: [
+            ' line1',
+            '-line2',
+            '+',
+            ' line3'
+          ]
+        }
+      ]
+    }
+  ])
+  test.done()
+}

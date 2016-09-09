@@ -63,7 +63,7 @@ hunk_range
   / start:NUMBER                  { return {start, count: 1} }
 
 hunk_line
-  = chars:(('+' / '-' / ' ' / '\\') TEXT) NL { return chars.join('') }
+  = chars:(('+' / '-' / ' ' / '\\') TEXT?) NL { return chars.join('') }
 
 diff_header_line
   = 'diff ' options:TEXT_NO_SPACES ' ' file_name:file_name_str NL { return {file_name} }
