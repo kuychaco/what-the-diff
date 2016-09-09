@@ -40,6 +40,66 @@ index 83db48f..bf269f4 100644
   test.done()
 }
 
+exports.testNewPatch = function(test) {
+  var str = `diff --git file.txt file.txt
+new file mode 100644
+index 0000000..dab621c
+--- /dev/null
++++ file.txt
+@@ -0,0 +1 @@
++foo`
+
+  const output = diff.parse(str)
+  assert.deepEqual(output, [
+    {
+      oldPath: null,
+      newPath: 'file.txt',
+      oldMode: null,
+      newMode: '100644',
+      hunks: [
+        {
+          oldStartLine: 0,
+          oldLineCount: 0,
+          newStartLine: 1,
+          newLineCount: 1,
+          lines: ['+foo']
+        }
+      ]
+    }
+  ])
+  test.done()
+}
+
+exports.testRemovedPatch = function(test) {
+  var str = `diff --git file.txt file.txt
+deleted file mode 100644
+index dab621c..0000000
+--- file.txt
++++ /dev/null
+@@ -1 +0,0 @@
+-foo`
+
+  const output = diff.parse(str)
+  assert.deepEqual(output, [
+    {
+      oldPath: 'file.txt',
+      newPath: null,
+      oldMode: '100644',
+      newMode: null,
+      hunks: [
+        {
+          oldStartLine: 1,
+          oldLineCount: 1,
+          newStartLine: 0,
+          newLineCount: 0,
+          lines: ['-foo']
+        }
+      ]
+    }
+  ])
+  test.done()
+}
+
 exports.testFileModeChange = function(test) {
   var str = `diff --git file.txt file.txt
 old mode 100644

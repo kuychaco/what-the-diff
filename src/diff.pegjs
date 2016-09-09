@@ -31,9 +31,11 @@ diff
 
 patch
   = header:patch_header hunks:hunk+ {
+    const oldName = header.old_file_name
+    const newName = header.new_file_name
     return {
-      oldPath: header.old_file_name,
-      newPath: header.new_file_name,
+      oldPath: oldName !== '/dev/null' ? oldName : null,
+      newPath: newName !== '/dev/null' ? newName : null,
       hunks
     }
   }
