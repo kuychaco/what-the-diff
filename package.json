@@ -1,0 +1,22 @@
+{
+  "name": "what-the-diff",
+  "version": "0.0.1",
+  "description": "diff parsing library",
+  "main": "index.js",
+  "scripts": {
+    "build": "pegjs --cache -o lib/parser.js src/diff.pegjs",
+    "test": "nodeunit test/*.test.js",
+    "prepublish": "npm run build"
+  },
+  "repository": "git://github.com/kuychaco/what-the-diff.git",
+  "keywords": [
+    "diff",
+    "parser"
+  ],
+  "author": "Katrina Uychaco <kuychaco@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "nodeunit": "^0.10.2",
+    "pegjs": "^0.10.0"
+  }
+}
