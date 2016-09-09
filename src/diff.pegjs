@@ -42,18 +42,33 @@ diffs
   = diffs:diff* { return diffs }
 
 diff
+  = merge_conflict_diff
+  / unmerged_path
+  / regular_diff
+
+regular_diff
   = header:diff_header_line file_modes:file_mode_section? patch:patch? { return postProcessDiff(header, file_modes, patch) }
 
-patch
-  = header:patch_header hunks:hunk+ {
-    const oldName = header.old_file_name
-    const newName = header.new_file_name
+merge_conflict_diff
+  = path:merge_conflict_header_line index_line patch:patch? {
+    patch.status = 'unmerged'
+    patch.filePath = path
+    return patch
+  }
+
+merge_conflict_header_line
+  = 'diff --cc ' path:TEXT NL { return path }
+
+unmerged_path
+  = '* Unmerged path ' path:TEXT NL {
     return {
-      oldPath: oldName !== '/dev/null' ? oldName : null,
-      newPath: newName !== '/dev/null' ? newName : null,
-      hunks
+      filePath: path,
+      status: 'unmerged'
     }
   }
+
+patch
+  = header:patch_header hunks:hunk+ { return {hunks} }
 
 patch_header
   = '--- ' old_file_name:TEXT NL '+++ ' new_file_name:TEXT NL { return {old_file_name, new_file_name} }
@@ -66,6 +81,22 @@ hunk
   }
 
 hunk_header
+  = merge_conflict_hunk_header
+  / regular_hunk_header
+
+merge_conflict_hunk_header
+  = '@@@ -' our_range:hunk_range ' -' base_range:hunk_range ' +' their_range:hunk_range ' @@@' context:TEXT? NL {
+    return {
+      ourStartLine: our_range.start,
+      ourLineCount: our_range.count,
+      theirStartLine: their_range.start,
+      theirLineCount: their_range.count,
+      baseStartLine: base_range.start,
+      baseLineCount: base_range.count
+    }
+  }
+
+regular_hunk_header
   = '@@ -' old_range:hunk_range ' +' new_range:hunk_range ' @@' context:TEXT? NL {
     return {
       oldStartLine: old_range.start,
