@@ -1,6 +1,7 @@
 # JavaScript Diff Parser
 
 ![](https://pbs.twimg.com/media/ByZVWXgIIAA5Y2D.png:large)
+Credit: [@eightballart](https://twitter.com/EightballArt/status/515195030546690048)
 
 Parse unified diffs with JavaScript
 
