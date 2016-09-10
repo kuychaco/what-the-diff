@@ -1,6 +1,6 @@
 {
   "name": "what-the-diff",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "diff parsing library",
   "main": "index.js",
   "scripts": {
