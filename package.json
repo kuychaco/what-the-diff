@@ -4,7 +4,7 @@
   "description": "diff parsing library",
   "main": "index.js",
   "scripts": {
-    "build": "pegjs --cache -o lib/parser.js src/diff.pegjs",
+    "build": "pegjs -o lib/parser.js src/diff.pegjs",
     "test": "nodeunit test/*.test.js",
     "prepublish": "npm run build"
   },
