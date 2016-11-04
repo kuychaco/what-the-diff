@@ -16,6 +16,7 @@
   "author": "Katrina Uychaco <kuychaco@gmail.com>",
   "license": "MIT",
   "devDependencies": {
+    "dedent-js": "^1.0.1",
     "nodeunit": "^0.10.2",
     "pegjs": "^0.10.0"
   }
