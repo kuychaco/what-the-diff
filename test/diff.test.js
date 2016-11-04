@@ -412,6 +412,9 @@ exports.testMergeConflicts = function(test) {
     ++>>>>>>> branch
     * Unmerged path removed-on-branch.txt
     * Unmerged path removed-on-master.txt
+    diff --cc image.gif
+    index e6551c7,5f88da9..0000000
+    Binary files differ
   `
 
   const output = diff.parse(str)
@@ -437,15 +440,23 @@ exports.testMergeConflicts = function(test) {
             '++>>>>>>> branch'
           ]
         }
-      ]
+      ],
+      binary: false
     },
     {
       filePath: 'removed-on-branch.txt',
-      status: 'unmerged'
+      status: 'unmerged',
+      binary: false
     },
     {
       filePath: 'removed-on-master.txt',
-      status: 'unmerged'
+      status: 'unmerged',
+      binary: false
+    },
+    {
+      filePath: 'image.gif',
+      status: 'unmerged',
+      binary: true
     }
   ])
   test.done()

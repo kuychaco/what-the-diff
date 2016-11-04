@@ -39,13 +39,22 @@
       throw new Error('file modes missing')
     }
   }
+
+  function postProcessMergeConflictDiff (filePath, patch, binary) {
+    patch = patch || {}
+    patch.filePath = filePath
+    patch.status = 'unmerged'
+    patch.binary = !!binary
+    return patch
+  }
 }
 
 diffs
   = diffs:diff* { return diffs }
 
 diff
-  = merge_conflict_diff
+  = binary_merge_conflict_diff
+  / merge_conflict_diff
   / unmerged_path
   / binary_diff
   / regular_diff
@@ -59,23 +68,17 @@ binary_declaration
 regular_diff
   = header:diff_header_line file_modes:file_mode_section? patch:patch? { return postProcessDiff(header, file_modes, patch) }
 
+binary_merge_conflict_diff
+  = path:merge_conflict_header_line index_line binary_declaration { return postProcessMergeConflictDiff(path, undefined, true) }
+
 merge_conflict_diff
-  = path:merge_conflict_header_line index_line patch:patch? {
-    patch.status = 'unmerged'
-    patch.filePath = path
-    return patch
-  }
+  = path:merge_conflict_header_line index_line patch:patch? { return postProcessMergeConflictDiff(path, patch) }
 
 merge_conflict_header_line
   = 'diff --cc ' path:TEXT NL { return path }
 
 unmerged_path
-  = '* Unmerged path ' path:TEXT NL {
-    return {
-      filePath: path,
-      status: 'unmerged'
-    }
-  }
+  = '* Unmerged path ' path:TEXT NL { return postProcessMergeConflictDiff(path) }
 
 patch
   = header:patch_header hunks:hunk+ { return {hunks} }
