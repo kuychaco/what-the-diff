@@ -1,5 +1,5 @@
 {
-  function postProcessDiff (header, file_modes, patch) {
+  function postProcessDiff (header, file_modes, patch, binary) {
     let status
     if (file_modes.old_mode && !file_modes.new_mode) {
       return {
@@ -8,7 +8,8 @@
         newMode: null,
         oldMode: file_modes.old_mode,
         hunks: patch ? patch.hunks : [],
-        status: 'deleted'
+        status: 'deleted',
+        binary: !!binary
       }
     } else if (!file_modes.old_mode && file_modes.new_mode) {
       return {
@@ -17,20 +18,22 @@
         oldMode: null,
         newMode: file_modes.new_mode,
         hunks: patch ? patch.hunks : [],
-        status: 'added'
+        status: 'added',
+        binary: !!binary
       }
     } else if (file_modes.old_mode && file_modes.new_mode) {
-      if (patch) {
+      if (patch || binary) {
         return {
           newPath: header.file_name,
           oldPath: header.file_name,
           oldMode: file_modes.old_mode,
           newMode: file_modes.new_mode,
-          hunks: patch.hunks,
-          status: 'modified'
+          hunks: patch ? patch.hunks : [],
+          status: 'modified',
+          binary: !!binary
         }
       } else {
-        throw new Error('patch expected')
+        throw new Error('patch or binary expected')
       }
     } else {
       throw new Error('file modes missing')
@@ -44,7 +47,14 @@ diffs
 diff
   = merge_conflict_diff
   / unmerged_path
+  / binary_diff
   / regular_diff
+
+binary_diff
+  = header:diff_header_line file_modes:file_mode_section? binary_declaration { return postProcessDiff(header, file_modes, undefined, true) }
+
+binary_declaration
+  = 'Binary files ' TEXT NL
 
 regular_diff
   = header:diff_header_line file_modes:file_mode_section? patch:patch? { return postProcessDiff(header, file_modes, patch) }
@@ -133,7 +143,7 @@ changed_file_modes
 
 index_line
   = 'index ' TEXT_NO_SPACES ' ' file_mode:TEXT NL { return {old_mode: file_mode, new_mode: file_mode} }
-  / 'index ' TEXT_NO_SPACES NL 
+  / 'index ' TEXT_NO_SPACES NL
 
 
 

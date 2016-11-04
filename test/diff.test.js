@@ -38,7 +38,8 @@ exports.testSimplePatch = function(test) {
             ' line3'
           ]
         }
-      ]
+      ],
+      binary: false
     }
   ])
   test.done()
@@ -71,7 +72,8 @@ exports.testNewPatch = function(test) {
           newLineCount: 1,
           lines: ['+foo']
         }
-      ]
+      ],
+      binary: false
     }
   ])
   test.done()
@@ -104,7 +106,8 @@ exports.testRemovedPatch = function(test) {
           newLineCount: 0,
           lines: ['-foo']
         }
-      ]
+      ],
+      binary: false
     }
   ])
   test.done()
@@ -146,7 +149,8 @@ exports.testFileModeChange = function(test) {
             ' line3'
           ]
         }
-      ]
+      ],
+      binary: false
     }
   ])
   test.done()
@@ -167,7 +171,8 @@ exports.testNewEmptyFile = function(test) {
       oldMode: null,
       newMode: '100644',
       hunks: [],
-      status: 'added'
+      status: 'added',
+      binary: false
     }
   ])
   test.done()
@@ -203,7 +208,8 @@ exports.testSingleLineHunk = function(test) {
             '+line2'
           ]
         }
-      ]
+      ],
+      binary: false
     }
   ])
   test.done()
@@ -264,7 +270,8 @@ exports.testMultipleHunks = function(test) {
             ' line9'
           ]
         }
-      ]
+      ],
+      binary: false
     }
   ])
   test.done()
@@ -302,7 +309,8 @@ exports.testRemovedEOFNL = function(test) {
             '\ No newline at end of file'
           ]
         }
-      ]
+      ],
+      binary: false
     }
   ])
   test.done()
@@ -340,7 +348,8 @@ exports.testAddedEOFNL = function(test) {
             '+line'
           ]
         }
-      ]
+      ],
+      binary: false
     }
   ])
   test.done()
@@ -380,7 +389,8 @@ exports.testEmptyHunkLine = function(test) {
             ' line3'
           ]
         }
-      ]
+      ],
+      binary: false
     }
   ])
   test.done()
@@ -437,6 +447,54 @@ exports.testMergeConflicts = function(test) {
       filePath: 'removed-on-master.txt',
       status: 'unmerged'
     }
+  ])
+  test.done()
+}
+
+exports.testBinaryFiles = function(test) {
+  var str = dedent`
+    diff --git one.gif one.gif
+    new file mode 100644
+    index 0000000..9243b23
+    Binary files /dev/null and one.gif differ
+    diff --git two.gif two.gif
+    index 9243b23..e26b70a 100644
+    Binary files two.gif and two.gif differ
+    diff --git three.gif three.gif
+    deleted file mode 100644
+    index e26b70a..0000000
+    Binary files three.gif and /dev/null differ
+  `
+
+  const output = diff.parse(str)
+  assert.deepEqual(output, [
+    {
+      oldPath: null,
+      newPath: 'one.gif',
+      oldMode: null,
+      newMode: '100644',
+      status: 'added',
+      hunks: [],
+      binary: true
+    },
+    {
+      oldPath: 'two.gif',
+      newPath: 'two.gif',
+      oldMode: '100644',
+      newMode: '100644',
+      status: 'modified',
+      hunks: [],
+      binary: true
+    },
+    {
+      oldPath: 'three.gif',
+      newPath: null,
+      oldMode: '100644',
+      newMode: null,
+      status: 'deleted',
+      hunks: [],
+      binary: true
+    },
   ])
   test.done()
 }
