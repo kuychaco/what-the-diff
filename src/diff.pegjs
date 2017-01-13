@@ -105,7 +105,8 @@ merge_conflict_hunk_header
       theirStartLine: their_range.start,
       theirLineCount: their_range.count,
       baseStartLine: base_range.start,
-      baseLineCount: base_range.count
+      baseLineCount: base_range.count,
+      heading: context ? context.trim() : '',
     }
   }
 
@@ -115,7 +116,8 @@ regular_hunk_header
       oldStartLine: old_range.start,
       oldLineCount: old_range.count,
       newStartLine: new_range.start,
-      newLineCount: new_range.count
+      newLineCount: new_range.count,
+      heading: context ? context.trim() : '',
     }
   }
 

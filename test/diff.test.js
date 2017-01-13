@@ -10,7 +10,7 @@ exports.testSimplePatch = function(test) {
     index 83db48f..bf269f4 100644
     --- file.txt
     +++ file.txt
-    @@ -1,3 +1,3 @@
+    @@ -1,3 +1,3 @@ class Thing {
      line1
     -line2
     +new line
@@ -31,6 +31,7 @@ exports.testSimplePatch = function(test) {
           oldLineCount: 3,
           newStartLine: 1,
           newLineCount: 3,
+          heading: 'class Thing {',
           lines: [
             ' line1',
             '-line2',
@@ -70,6 +71,7 @@ exports.testNewPatch = function(test) {
           oldLineCount: 0,
           newStartLine: 1,
           newLineCount: 1,
+          heading: '',
           lines: ['+foo']
         }
       ],
@@ -104,6 +106,7 @@ exports.testRemovedPatch = function(test) {
           oldLineCount: 1,
           newStartLine: 0,
           newLineCount: 0,
+          heading: '',
           lines: ['-foo']
         }
       ],
@@ -142,6 +145,7 @@ exports.testFileModeChange = function(test) {
           oldLineCount: 3,
           newStartLine: 1,
           newLineCount: 3,
+          heading: '',
           lines: [
             ' line1',
             '-line2',
@@ -203,6 +207,7 @@ exports.testSingleLineHunk = function(test) {
           oldLineCount: 1,
           newStartLine: 1,
           newLineCount: 1,
+          heading: '',
           lines: [
             '-line1',
             '+line2'
@@ -249,6 +254,7 @@ exports.testMultipleHunks = function(test) {
           oldLineCount: 5,
           newStartLine: 1,
           newLineCount: 4,
+          heading: '',
           lines: [
             ' line1',
             '-line2',
@@ -262,6 +268,7 @@ exports.testMultipleHunks = function(test) {
           oldLineCount: 4,
           newStartLine: 14,
           newLineCount: 5,
+          heading: '',
           lines: [
             ' line6',
             ' line7',
@@ -303,6 +310,7 @@ exports.testRemovedEOFNL = function(test) {
           oldLineCount: 1,
           newStartLine: 1,
           newLineCount: 1,
+          heading: '',
           lines: [
             '-line',
             '+line',
@@ -342,6 +350,7 @@ exports.testAddedEOFNL = function(test) {
           oldLineCount: 1,
           newStartLine: 1,
           newLineCount: 1,
+          heading: '',
           lines: [
             '-line',
             '\ No newline at end of file',
@@ -382,6 +391,7 @@ exports.testEmptyHunkLine = function(test) {
           oldLineCount: 3,
           newStartLine: 1,
           newLineCount: 3,
+          heading: '',
           lines: [
             ' line1',
             '-line2',
@@ -402,7 +412,7 @@ exports.testMergeConflicts = function(test) {
     index 5b7855c,1353022..0000000
     --- modified-on-both.txt
     +++ modified-on-both.txt
-    @@@ -1,1 -1,1 +1,7 @@@
+    @@@ -1,1 -1,1 +1,7 @@@ some context
     ++<<<<<<< HEAD
      +master modification
     ++||||||| merged common ancestors
@@ -430,6 +440,7 @@ exports.testMergeConflicts = function(test) {
           baseLineCount: 1,
           theirStartLine: 1,
           theirLineCount: 7,
+          heading: 'some context',
           lines: [
             '++<<<<<<< HEAD',
             ' +master modification',
