@@ -22,18 +22,14 @@
         binary: !!binary
       }
     } else if (file_modes.old_mode && file_modes.new_mode) {
-      if (patch || binary) {
-        return {
-          newPath: header.file_name,
-          oldPath: header.file_name,
-          oldMode: file_modes.old_mode,
-          newMode: file_modes.new_mode,
-          hunks: patch ? patch.hunks : [],
-          status: 'modified',
-          binary: !!binary
-        }
-      } else {
-        throw new Error('patch or binary expected')
+      return {
+        newPath: header.file_name,
+        oldPath: header.file_name,
+        oldMode: file_modes.old_mode,
+        newMode: file_modes.new_mode,
+        hunks: patch ? patch.hunks : [],
+        status: 'modified',
+        binary: !!binary
       }
     } else {
       throw new Error('file modes missing')

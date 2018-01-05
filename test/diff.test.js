@@ -520,3 +520,25 @@ exports.testBinaryFiles = function(test) {
   ])
   test.done()
 }
+
+exports.testNoPatch = function(test) {
+  var str = dedent`
+  diff --git file.txt file.txt
+  old mode 100644
+  new mode 100755
+  `
+
+  const output = diff.parse(str)
+  assert.deepEqual(output, [
+    {
+      oldPath: 'file.txt',
+      newPath: 'file.txt',
+      oldMode: '100644',
+      newMode: '100755',
+      status: 'modified',
+      hunks: [],
+      binary: false
+    },
+  ])
+  test.done()
+}
