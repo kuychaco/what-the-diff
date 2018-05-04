@@ -77,7 +77,7 @@ unmerged_path
   = '* Unmerged path ' path:TEXT NL { return postProcessMergeConflictDiff(path) }
 
 patch
-  = header:patch_header hunks:hunk+ { return {hunks} }
+  = header:patch_header hunks:hunk* { return {hunks} }
 
 patch_header
   = '--- ' old_file_name:TEXT NL '+++ ' new_file_name:TEXT NL { return {old_file_name, new_file_name} }
