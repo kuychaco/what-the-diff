@@ -542,3 +542,23 @@ exports.testNoPatch = function(test) {
   ])
   test.done()
 }
+
+exports.testMergeConflictNoPatch = function(test) {
+  var str = dedent`
+  diff --cc file-0.txt
+  index 1fbec74,3bfc451..0000000
+  --- file-0.txt
+  +++ file-0.txt
+  `
+
+  const output = diff.parse(str)
+  assert.deepEqual(output, [
+    {
+      filePath: 'file-0.txt',
+      status: 'unmerged',
+      hunks: [],
+      binary: false
+    }
+  ])
+  test.done()
+}
