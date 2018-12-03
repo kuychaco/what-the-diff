@@ -44,14 +44,14 @@
     return patch
   }
 
-  function postProcessSimilarityDiff (renamed_or_copied, similarity_index, old_file, new_file) {
+  function postProcessSimilarityDiff (rename_or_copy, similarity_index, old_file, new_file) {
     return {
       oldPath: old_file,
       newPath: new_file,
       oldMode: null,
       newMode: null,
       hunks: [],
-      status: renamed_or_copied,
+      status: rename_or_copy === 'copy' ? 'copied' : 'renamed',
       similarity: similarity_index,
       binary: null
     }
@@ -63,8 +63,7 @@ diffs
 
 diff
   = binary_merge_conflict_diff
-  / rename_only_diff
-  / copy_only_diff
+  / rename_or_copy_diff
   / merge_conflict_diff
   / unmerged_path
   / binary_diff
@@ -82,14 +81,9 @@ regular_diff
 binary_merge_conflict_diff
   = path:merge_conflict_header_line index_line binary_declaration { return postProcessMergeConflictDiff(path, undefined, true) }
 
-rename_only_diff
-  = header:rename_or_copy_diff_header_line similarity:similarity_index old_file:rename_from new_file:rename_to {
-    return postProcessSimilarityDiff("renamed", similarity, old_file, new_file)
-  }
-
-copy_only_diff
-  = header:rename_or_copy_diff_header_line similarity:similarity_index old_file:copy_from new_file:copy_to {
-    return postProcessSimilarityDiff("copied", similarity, old_file, new_file)
+rename_or_copy_diff
+  = header:rename_or_copy_diff_header_line similarity:similarity_index old_file:rename_copy_from new_file:rename_copy_to {
+    return postProcessSimilarityDiff(old_file.operation, similarity, old_file.file, new_file.file)
   }
 
 merge_conflict_diff
@@ -173,17 +167,11 @@ new_or_deleted_file_mode
 changed_file_modes
   = 'old mode ' old_mode:TEXT NL 'new mode ' new_mode:TEXT NL { return {old_mode, new_mode} }
 
-rename_from
-  = 'rename from ' file:TEXT NL { return file }
+rename_copy_from
+  = operation:('rename' / 'copy') ' from ' file:TEXT NL { return {operation, file} }
 
-rename_to
-  = 'rename to ' file:TEXT NL { return file }
-
-copy_from
-  = 'copy from ' file:TEXT NL { return file }
-
-copy_to
-  = 'copy to ' file:TEXT NL { return file }
+rename_copy_to
+  = operation:('rename' / 'copy') ' to ' file:TEXT NL { return {operation, file} }
 
 index_line
   = 'index ' TEXT_NO_SPACES ' ' file_mode:TEXT NL { return {old_mode: file_mode, new_mode: file_mode} }
