@@ -543,6 +543,44 @@ exports.testNoPatch = function(test) {
   test.done()
 }
 
+exports.testRenameCopy = function(test) {
+  var str = dedent`
+  diff --git old/file.png new/file.png
+  similarity index 90%
+  rename from old/file.png
+  rename to new/file.png
+  diff --git copy/file.png copy/file2.png
+  similarity index 100%
+  copy from copy/file.png
+  copy to copy/file2.png
+  `
+
+  const output = diff.parse(str)
+  assert.deepEqual(output, [
+    {
+      oldPath: 'old/file.png',
+      newPath: 'new/file.png',
+      oldMode: null,
+      newMode: null,
+      status: 'renamed',
+      similarity: 90,
+      hunks: [],
+      binary: null
+    },
+    {
+      oldPath: 'copy/file.png',
+      newPath: 'copy/file2.png',
+      oldMode: null,
+      newMode: null,
+      status: 'copied',
+      similarity: 100,
+      hunks: [],
+      binary: null
+    },
+  ])
+  test.done()
+}
+
 exports.testMergeConflictNoPatch = function(test) {
   var str = dedent`
   diff --cc file-0.txt

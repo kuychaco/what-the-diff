@@ -43,6 +43,19 @@
     patch.binary = !!binary
     return patch
   }
+
+  function postProcessSimilarityDiff (renamed_or_copied, similarity_index, old_file, new_file) {
+    return {
+      oldPath: old_file,
+      newPath: new_file,
+      oldMode: null,
+      newMode: null,
+      hunks: [],
+      status: renamed_or_copied,
+      similarity: similarity_index,
+      binary: null
+    }
+  }
 }
 
 diffs
@@ -50,6 +63,8 @@ diffs
 
 diff
   = binary_merge_conflict_diff
+  / rename_only_diff
+  / copy_only_diff
   / merge_conflict_diff
   / unmerged_path
   / binary_diff
@@ -66,6 +81,16 @@ regular_diff
 
 binary_merge_conflict_diff
   = path:merge_conflict_header_line index_line binary_declaration { return postProcessMergeConflictDiff(path, undefined, true) }
+
+rename_only_diff
+  = header:rename_or_copy_diff_header_line similarity:similarity_index old_file:rename_from new_file:rename_to {
+    return postProcessSimilarityDiff("renamed", similarity, old_file, new_file)
+  }
+
+copy_only_diff
+  = header:rename_or_copy_diff_header_line similarity:similarity_index old_file:copy_from new_file:copy_to {
+    return postProcessSimilarityDiff("copied", similarity, old_file, new_file)
+  }
 
 merge_conflict_diff
   = path:merge_conflict_header_line index_line patch:patch? { return postProcessMergeConflictDiff(path, patch) }
@@ -127,8 +152,14 @@ hunk_line
 diff_header_line
   = 'diff ' options:TEXT_NO_SPACES ' ' file_name:file_name_str NL { return {file_name} }
 
+rename_or_copy_diff_header_line
+  = 'diff ' options:TEXT_NO_SPACES ' ' files_unused:TEXT NL
+
 file_name_str
   = str:TEXT { return str.substr(str.length/2 + 1) }
+
+similarity_index
+  = 'similarity index ' idx:NUMBER '%' NL { return idx }
 
 file_mode_section
   = explicit_file_modes:(new_or_deleted_file_mode / changed_file_modes)? index_file_modes:index_line? { return explicit_file_modes || index_file_modes }
@@ -141,6 +172,18 @@ new_or_deleted_file_mode
 
 changed_file_modes
   = 'old mode ' old_mode:TEXT NL 'new mode ' new_mode:TEXT NL { return {old_mode, new_mode} }
+
+rename_from
+  = 'rename from ' file:TEXT NL { return file }
+
+rename_to
+  = 'rename to ' file:TEXT NL { return file }
+
+copy_from
+  = 'copy from ' file:TEXT NL { return file }
+
+copy_to
+  = 'copy to ' file:TEXT NL { return file }
 
 index_line
   = 'index ' TEXT_NO_SPACES ' ' file_mode:TEXT NL { return {old_mode: file_mode, new_mode: file_mode} }

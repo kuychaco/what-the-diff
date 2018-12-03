@@ -53,3 +53,5 @@ parse(diffStr)
     ]
   }
 ```
+
+If the diff includes a similarity index line (from a detected copy or rename), the `similarity` property will be set, and will be a number.
