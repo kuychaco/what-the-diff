@@ -13,6 +13,12 @@
     "diff",
     "parser"
   ],
+  "files": [
+    "index.js",
+    "lib/**/*",
+    "src/**/*",
+    "test/**/*"
+  ],
   "author": "Katrina Uychaco <kuychaco@gmail.com>",
   "license": "MIT",
   "devDependencies": {
