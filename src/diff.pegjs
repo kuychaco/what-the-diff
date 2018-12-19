@@ -48,12 +48,9 @@
     return {
       oldPath: old_file,
       newPath: new_file,
-      oldMode: null,
-      newMode: null,
       hunks: [],
       status: rename_or_copy === 'copy' ? 'copied' : 'renamed',
       similarity: similarity_index,
-      binary: null
     }
   }
 }

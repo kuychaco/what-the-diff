@@ -560,22 +560,16 @@ exports.testRenameCopy = function(test) {
     {
       oldPath: 'old/file.png',
       newPath: 'new/file.png',
-      oldMode: null,
-      newMode: null,
       status: 'renamed',
       similarity: 90,
       hunks: [],
-      binary: null
     },
     {
       oldPath: 'copy/file.png',
       newPath: 'copy/file2.png',
-      oldMode: null,
-      newMode: null,
       status: 'copied',
       similarity: 100,
       hunks: [],
-      binary: null
     },
   ])
   test.done()
