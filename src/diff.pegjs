@@ -79,7 +79,7 @@ binary_merge_conflict_diff
   = path:merge_conflict_header_line index_line binary_declaration { return postProcessMergeConflictDiff(path, undefined, true) }
 
 rename_or_copy_diff
-  = header:rename_or_copy_diff_header_line similarity:similarity_index copy_from:rename_copy_from copy_to:rename_copy_to {
+  = rename_or_copy_diff_header_line similarity:similarity_index copy_from:rename_copy_from copy_to:rename_copy_to {
     return postProcessSimilarityDiff(copy_from.operation, similarity, copy_from.file, copy_to.file)
   }
 
