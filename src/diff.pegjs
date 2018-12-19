@@ -44,14 +44,19 @@
     return patch
   }
 
-  function postProcessSimilarityDiff (rename_or_copy, similarity_index, old_file, new_file) {
-    return {
+  function postProcessSimilarityDiff (rename_or_copy, similarity_index, old_file, new_file, file_modes, patch) {
+    const diff = {
       oldPath: old_file,
       newPath: new_file,
-      hunks: [],
+      hunks: patch ? patch.hunks : [],
       status: rename_or_copy === 'copy' ? 'copied' : 'renamed',
       similarity: similarity_index,
     }
+    if (file_modes) {
+      diff.oldMode = file_modes.old_mode
+      diff.newMode = file_modes.new_mode
+    }
+    return diff
   }
 }
 
@@ -79,8 +84,10 @@ binary_merge_conflict_diff
   = path:merge_conflict_header_line index_line binary_declaration { return postProcessMergeConflictDiff(path, undefined, true) }
 
 rename_or_copy_diff
-  = rename_or_copy_diff_header_line similarity:similarity_index copy_from:rename_copy_from copy_to:rename_copy_to {
-    return postProcessSimilarityDiff(copy_from.operation, similarity, copy_from.file, copy_to.file)
+  = rename_or_copy_diff_header_line modes:changed_file_modes? similarity:similarity_index copy_from:rename_copy_from copy_to:rename_copy_to
+    index_modes:index_line? patch:patch?
+  {
+    return postProcessSimilarityDiff(copy_from.operation, similarity, copy_from.file, copy_to.file, modes || index_modes, patch)
   }
 
 merge_conflict_diff

@@ -575,6 +575,47 @@ exports.testRenameCopy = function(test) {
   test.done()
 }
 
+exports.testRenameWithChangedLinesAndModeChange = function(test) {
+  var str = dedent`
+  diff --git file.txt rename-file.txt
+  old mode 100644
+  new mode 100755
+  similarity index 76%
+  rename from file.txt
+  rename to rename-file.txt
+  index 471a7b8..3e32ec2
+  --- file.txt
+  +++ rename-file.txt
+  @@ -1,4 +1,5 @@
+   foo
+   bar
+   baz
+  +qux
+
+  `;
+
+  const output = diff.parse(str)
+  assert.deepEqual(output, [
+    {
+      oldPath: "file.txt",
+      newPath: "rename-file.txt",
+      oldMode: "100644",
+      newMode: "100755",
+      status: "renamed",
+      similarity: 76,
+      hunks: [{
+        oldStartLine: 1,
+        oldLineCount: 4,
+        newStartLine: 1,
+        newLineCount: 5,
+        heading: '',
+        lines: [' foo', ' bar', ' baz', '+qux']
+      }]
+    }
+  ]);
+  test.done()
+}
+
 exports.testMergeConflictNoPatch = function(test) {
   var str = dedent`
   diff --cc file-0.txt
