@@ -72,7 +72,7 @@ diff
   / regular_diff
 
 binary_diff
-  = header:diff_header_line file_modes:file_mode_section? binary_declaration { return postProcessDiff(header, file_modes, undefined, true) }
+  = header:diff_header_line file_modes:file_mode_section? patch_header? binary_declaration { return postProcessDiff(header, file_modes, undefined, true) }
 
 binary_declaration
   = 'Binary files ' TEXT NL

@@ -486,6 +486,12 @@ exports.testBinaryFiles = function(test) {
     deleted file mode 100644
     index e26b70a..0000000
     Binary files three.gif and /dev/null differ
+    diff --git a/cat.png b/cat.png
+    new file mode 100644
+    index 0000000..8b8dc61
+    --- /dev/null
+    +++ b/cat.png
+    Binary files differ
   `
 
   const output = diff.parse(str)
@@ -517,6 +523,15 @@ exports.testBinaryFiles = function(test) {
       hunks: [],
       binary: true
     },
+    {
+      oldPath: null,
+      newPath: 'b/cat.png',
+      hunks: [],
+      oldMode: null,
+      newMode: '100644',
+      status: 'added',
+      binary: true
+    }
   ])
   test.done()
 }
