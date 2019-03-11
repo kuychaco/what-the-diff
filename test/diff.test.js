@@ -521,6 +521,28 @@ exports.testBinaryFiles = function(test) {
   test.done()
 }
 
+exports.testBinaryFilesRename = function(test) {
+  var str = dedent`
+    diff --git a/dir_a/one.png b/dir_b/one.png
+    similarity index 100%
+    rename from dir_a/one.png
+    rename to dir_b/one.png
+    Binary files differ
+  `
+
+  const output = diff.parse(str)
+  assert.deepEqual(output, [
+    {
+      oldPath: 'dir_a/one.png',
+      newPath: 'dir_b/one.png',
+      hunks: undefined,
+      status: 'renamed',
+      similarity: 100
+    }
+  ])
+  test.done()
+}
+
 exports.testNoPatch = function(test) {
   var str = dedent`
   diff --git file.txt file.txt
