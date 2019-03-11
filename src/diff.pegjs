@@ -85,7 +85,7 @@ binary_merge_conflict_diff
 
 rename_or_copy_diff
   = rename_or_copy_diff_header_line modes:changed_file_modes? similarity:similarity_index copy_from:rename_copy_from copy_to:rename_copy_to
-    index_modes:index_line? patch:patch?
+    index_modes:index_line? patch:(binary_declaration / patch)?
   {
     return postProcessSimilarityDiff(copy_from.operation, similarity, copy_from.file, copy_to.file, modes || index_modes, patch)
   }
