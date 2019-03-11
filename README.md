@@ -16,7 +16,7 @@ what-the-diff is available via npm
 ## Usage
 
 ```javascript
-let parse = require('what-the-diff')
+let {parse} = require('what-the-diff')
 
 var str = `diff --git file.txt file.txt
 index 83db48f..bf269f4 100644
